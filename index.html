@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#cbb6ff">
+<title>Pecking Order · Puzzl Lab</title>
+<meta name="description" content="Five things, one order. Can you rule the roost? A new daily ranking puzzle from Puzzl Lab.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Puzzl Lab">
+<meta property="og:title" content="Pecking Order · Who rules the roost?">
+<meta property="og:description" content="Five things, one order. Can you rule the roost? A new daily ranking puzzle from Puzzl Lab.">
+<meta property="og:url" content="https://lukeb1991.github.io/Pecking-Order/">
+<meta property="og:image" content="https://lukeb1991.github.io/Pecking-Order/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lukeb1991.github.io/Pecking-Order/og-image.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐔%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Pecking Order palette: sherbet morning. Lilac to pink to yolk, cartoon outlines, show-rosette brights */
+  --ink:#2a1572;--bgA:#cbb6ff;--bgB:#ffc6de;--bgC:#ffe39e;
+  --panel:#ffffff;--panel2:#efe8ff;--line:rgba(42,21,114,.16);--line2:#2a1572;
+  --accent:#d81b6a;--yolk:#ffc928;--muted:#5a4a99;--text:#2a1572;--body:#3b2a80;
+  --ok:#2fd47a;--on-ok:#08331c;--comb:#ff4d6d;
+  --card:#ffffff;--card2:#fff6e6;--used:#cabdf2;
+  --purple:#a855f7;--pink:#ec4899;--grad:linear-gradient(90deg,var(--purple),var(--pink));
+  --serif:'DM Serif Display',Georgia,serif;--mono:'DM Mono',ui-monospace,monospace;--sans:'DM Sans',system-ui,sans-serif;
+  --ch:clamp(54px, 7.6vh, 62px);   /* card height */
+  --gap:8px;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+}
+@supports (height:100dvh){:root{--ch:clamp(54px, 7.6dvh, 62px)}}
+/* Pecking Order is the bright one in Puzzl Lab: same palette whatever the viewer's theme */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#2a1572;--text:#2a1572}}
+:root[data-theme="dark"]{--ink:#2a1572;--text:#2a1572}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bgC)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* chicken footprints wandering across a sherbet sky */
+body{min-height:100vh;font-family:var(--sans);color:var(--text);-webkit-font-smoothing:antialiased;background-color:var(--bgB);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170' fill='none' stroke='%23ffffff' stroke-opacity='.6' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath transform='translate(34 44) rotate(-20)' d='M0 0V-15M0 0L-10-11M0 0L10-11M0 0V6'/%3E%3Cpath transform='translate(118 28) rotate(28)' d='M0 0V-15M0 0L-10-11M0 0L10-11M0 0V6'/%3E%3Cpath transform='translate(76 106) rotate(8)' d='M0 0V-15M0 0L-10-11M0 0L10-11M0 0V6'/%3E%3Cpath transform='translate(144 134) rotate(-34)' d='M0 0V-15M0 0L-10-11M0 0L10-11M0 0V6'/%3E%3Cpath transform='translate(22 150) rotate(40)' d='M0 0V-15M0 0L-10-11M0 0L10-11M0 0V6'/%3E%3C/svg%3E") 0 0/170px 170px,
+    linear-gradient(180deg,var(--bgA) 0%,var(--bgB) 48%,var(--bgC) 100%) fixed var(--bgB)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+[hidden]{display:none!important}
+
+.wrap{max-width:500px;margin:0 auto;padding:12px 16px 0}
+.top{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:44px}
+.top .r{justify-self:end;display:flex;gap:8px}
+.icon{width:40px;height:40px;border-radius:50%;border:2px solid var(--ink);background:var(--panel);color:var(--ink);box-shadow:0 2px 0 var(--ink);font:500 16px var(--mono);display:grid;place-items:center}
+.icon svg{width:16px;height:16px}
+.icon:active{transform:translateY(2px);box-shadow:none}
+.kicker{font:500 12px var(--mono);letter-spacing:.3em;color:var(--ink);text-transform:uppercase;white-space:nowrap}
+/* the title is a prize ribbon: brand gradient banner with notched tails tucked behind */
+h1{position:relative;isolation:isolate;display:flex;justify-content:center;margin:10px 0 0}
+h1 span{position:relative;display:block;white-space:nowrap;padding:2px 20px 6px;font:400 clamp(32px,10vw,40px)/1.15 var(--serif);color:#fff;letter-spacing:.01em;
+  background:linear-gradient(90deg,#9446ff,#ea3b8c);border:2.5px solid var(--ink);border-radius:10px;box-shadow:0 4px 0 var(--ink);text-shadow:0 2px 0 rgba(42,21,114,.4)}
+h1 span::before,h1 span::after{content:"";position:absolute;top:14px;bottom:-12px;width:40px;z-index:-1;border:2.5px solid var(--ink);box-shadow:0 4px 0 var(--ink)}
+h1 span::before{left:-24px;background:#7b2ff0;clip-path:polygon(-10% -10%,110% -10%,110% 130%,-10% 130%,32% 55%)}
+h1 span::after{right:-24px;background:#d42a7a;clip-path:polygon(-10% -10%,110% -10%,68% 55%,110% 130%,-10% 130%)}
+.sub{font:italic 400 20px var(--serif);color:var(--ink);text-align:center;margin-top:14px}
+
+/* Today's question */
+.question{margin-top:16px;text-align:center}
+.question b{display:block;font:400 26px/1.1 var(--serif);color:var(--accent)}
+.question span{display:block;font:500 16px/1.4 var(--sans);color:var(--body);margin-top:4px}
+
+/* The ladder: five rungs with show rosettes, cards slide between them */
+.end{display:flex;align-items:center;gap:8px;font:700 13px var(--sans);color:var(--ink);margin:14px 0 8px 2px}
+.end svg{width:14px;height:14px;flex:none}
+.end.lo{margin:10px 0 0 2px;color:var(--muted)}
+.ladder{position:relative;display:grid;grid-template-columns:40px 1fr;column-gap:10px}
+.rungs{display:grid;gap:var(--gap)}
+.rosette{height:var(--ch);display:grid;place-items:center;position:relative}
+.rosette svg{width:40px;height:40px;overflow:visible}
+.rosette b{position:absolute;inset:0;display:grid;place-items:center;font:400 19px var(--serif);color:var(--ink);padding-bottom:1px}
+.cards{position:relative;height:calc(var(--ch) * 5 + var(--gap) * 4)}
+.card{position:absolute;left:0;right:0;top:0;height:var(--ch);display:flex;align-items:center;gap:10px;padding:0 10px 0 8px;text-align:left;
+  border-radius:14px;border:2px solid var(--ink);background:linear-gradient(180deg,var(--card),var(--card2));color:var(--ink);box-shadow:0 4px 0 var(--ink);
+  transition:transform .26s cubic-bezier(.2,.8,.3,1),background .2s,box-shadow .2s;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.card>*{pointer-events:none}
+.card{-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+.card .em{flex:none;width:36px;height:36px;border-radius:50%;background:var(--panel2);display:grid;place-items:center;font-size:20px;line-height:1}
+.card .nm{flex:1;min-width:0;font:700 15px/1.15 var(--sans);overflow-wrap:break-word}
+.card .grip{flex:none;width:18px;height:22px;opacity:.35}
+.card .val{flex:none;display:none;font:500 13px var(--mono);color:var(--accent);text-align:right;max-width:42%}
+.card.sel{background:linear-gradient(180deg,#fff7cf,#ffe98a);box-shadow:0 0 0 3px var(--yolk),0 4px 0 3px var(--ink)}
+.card.drag{transition:background .2s,box-shadow .2s;z-index:5;cursor:grabbing;background:linear-gradient(180deg,#fff7cf,#ffe98a);box-shadow:0 14px 0 -4px rgba(42,21,114,.25),0 18px 30px rgba(42,21,114,.3)}
+.card.ok{background:var(--ok);color:var(--on-ok);cursor:default}
+.card.ok .em{background:rgba(255,255,255,.45)}
+.card.ok .grip{display:none}
+.card.ok .val{color:var(--on-ok)}
+.card.miss{background:repeating-linear-gradient(135deg,rgba(255,77,109,.16) 0 6px,transparent 6px 12px),var(--card)}
+.done .card{cursor:default}
+.done .card .grip{display:none}
+.done .card .val{display:block}
+.card.pop{animation:pop .42s cubic-bezier(.2,1.5,.45,1)}
+.card.nope{animation:nope .4s ease}
+@keyframes pop{40%{scale:1.05}}
+@keyframes nope{20%,60%{translate:-5px 0}40%,80%{translate:5px 0}}
+@media (hover:hover){.card:not(.ok):not(.drag):not(.sel):hover{background:linear-gradient(180deg,#fff,#fff1d6)}}
+
+/* Tries: three eggs that crack */
+.eggs{display:flex;align-items:center;justify-content:center;gap:10px;margin:20px 0 2px;font:700 13px var(--sans);color:var(--ink)}
+.egg{width:22px;height:28px;display:inline-block}
+.egg svg{width:100%;height:100%;overflow:visible}
+.egg .shell{fill:#fff;stroke:var(--ink);stroke-width:1.8}
+.egg .crack{fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linejoin:round;opacity:0}
+.egg.used .shell{fill:var(--used);stroke:var(--muted)}
+.egg.used .crack{opacity:1;stroke:var(--muted)}
+.egg.cracking{animation:wobble .5s ease}
+@keyframes wobble{25%{rotate:-12deg}50%{rotate:9deg}75%{rotate:-4deg}}
+.msg{min-height:22px;text-align:center;font:500 14px var(--sans);color:var(--body);margin:6px 0}
+.msg.bad{color:#c2133f}.msg.warn{color:#8a4b00}.msg.good{color:#0b7a40}
+
+.controls{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.btn{height:50px;border-radius:14px;padding:0 20px;font:700 15px var(--sans);color:#fff;background:var(--grad);border:2px solid var(--ink);box-shadow:0 4px 0 var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.btn.ghost{background:var(--panel);color:var(--ink)}
+.btn.wide{width:100%}
+
+/* End of day */
+.fact{margin-top:18px;background:var(--panel);border:2px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);padding:12px 14px;font:400 15px/1.5 var(--sans);color:var(--body)}
+.fact b{color:var(--accent);font-weight:700}
+.result{position:relative;margin-top:18px;text-align:center;border:2px solid var(--ink);border-radius:16px;box-shadow:0 5px 0 var(--ink);padding:24px 18px 22px;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,201,40,.28),transparent 70%),var(--panel);animation:in .5s ease both}
+.stamp{display:inline-block;font:500 19px var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:6px 14px 6px 16px;border:3px solid currentColor;border-radius:8px;
+  box-shadow:inset 0 0 0 3px var(--panel),inset 0 0 0 5px currentColor;color:#13a35a;transform:rotate(-6deg);animation:thump .5s cubic-bezier(.2,1.5,.45,1) .15s both}
+.stamp.fail{color:#e0294f}
+@keyframes thump{from{opacity:0;transform:rotate(-6deg) scale(2.2)}to{opacity:1;transform:rotate(-6deg) scale(1)}}
+.verdict{font:400 34px/1.1 var(--serif);margin-top:16px}
+.line{font:400 16px/1.5 var(--sans);color:var(--body);margin-top:6px}
+.line b{color:var(--ink);font-weight:700}
+.mini{display:grid;gap:6px;justify-content:center;margin:16px 0 4px}
+.mini div{display:flex;gap:6px}
+.mini i{width:18px;height:23px;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;background:var(--used);border:1.5px solid var(--ink)}
+.mini i.y{background:var(--ok)}
+.streak{font:500 13px var(--mono);color:var(--ink);letter-spacing:.04em;margin-top:12px}
+.btns{display:flex;gap:8px;margin-top:18px}.btns .btn{flex:1;padding:0 12px}
+.next{font:500 13px var(--mono);color:var(--muted);margin-top:16px}
+.next b{color:var(--ink);font-weight:500}
+
+footer{text-align:center;font:400 12px var(--mono);color:var(--muted);padding:26px 0 calc(28px + env(safe-area-inset-bottom,0px))}
+footer b{color:var(--ink);font-weight:500}
+
+/* Modals */
+.modal{position:fixed;inset:0;background:rgba(42,21,114,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal.open{display:flex}
+.sheet{width:100%;max-width:420px;max-height:calc(100% - 20px);overflow:auto;background:var(--panel);border:2px solid var(--ink);box-shadow:0 5px 0 var(--ink);border-radius:16px;padding:22px;position:relative;animation:in .3s ease both}
+.sheet h2{font:400 30px var(--serif);margin-bottom:12px}
+.sheet p{font:400 15px/1.55 var(--sans);color:var(--body);margin-bottom:10px}
+.sheet p b{color:var(--ink)}
+.close{position:absolute;top:12px;right:12px}
+.demo{display:flex;gap:6px;align-items:center;margin:2px 0 12px}
+.demo i{flex:1;height:14px;border-radius:4px;background:var(--used);border:1.5px solid var(--ink)}
+.demo i.y{background:var(--ok)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin:8px 0 16px}
+.stats b{display:block;font:400 30px var(--serif)}
+.stats span{font:500 10px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.statlab{font:500 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.bar{display:flex;align-items:center;gap:8px;margin:5px 0;font:500 13px var(--mono)}
+.bar span{width:12px}
+.bar i{display:block;height:20px;min-width:24px;border-radius:4px;background:var(--panel2);font-style:normal;text-align:right;padding-right:7px;line-height:20px}
+.bar i.hl{background:var(--grad);color:#fff}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-10px);background:var(--ink);color:#fff;font:700 14px var(--sans);padding:10px 18px;border-radius:999px;opacity:0;transition:.25s;pointer-events:none;z-index:30}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.og{padding:20px;text-align:center}.og canvas{width:100%;max-width:1200px}
+
+/* Puzzle maker (?make) */
+.maker h2{font:400 30px var(--serif);margin:18px 0 6px}
+.maker p{font:400 15px/1.55 var(--sans);color:var(--body);margin-bottom:12px}
+.mk-box{border:2px solid var(--ink);border-left-width:6px;background:var(--panel);border-radius:10px;padding:12px;margin-bottom:10px}
+.mk-box label{display:block;font:500 12px var(--sans);color:var(--muted);margin:8px 0 4px}
+.mk-box label:first-child{margin-top:0}
+.maker input,.maker select,.maker textarea{width:100%;background:#fff;border:1.5px solid var(--line2);border-radius:8px;color:var(--ink);font:500 15px var(--sans);padding:9px 10px}
+.maker textarea{font:400 12px var(--mono);height:90px;resize:vertical}
+.mk-two{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mk-item{display:grid;grid-template-columns:24px 52px 1fr 104px;gap:6px;align-items:center;margin-top:6px}
+.mk-item b{font:400 18px var(--serif);color:var(--accent);text-align:center}
+.mk-item input:first-of-type{text-align:center;padding:9px 4px}
+.mk-row{display:flex;gap:8px;margin:10px 0}.mk-row .btn{flex:1}
+.mk-note{font:500 13px var(--sans);min-height:20px;margin:6px 0}
+.mk-note.bad{color:#c2133f}.mk-note.warn{color:#8a4b00}.mk-note.good{color:#0b7a40}
+
+@media (max-width:360px){.kicker{font-size:11px;letter-spacing:.16em}.card .nm{font-size:14px}.ladder{grid-template-columns:34px 1fr;column-gap:8px}.rosette svg{width:34px;height:34px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+
+<body>
+<main class="wrap" id="app">
+  <div class="top">
+    <button class="icon" id="helpBtn" aria-label="How to play">?</button>
+    <span class="kicker" id="kicker">Coop No. 1</span>
+    <div class="r">
+      <button class="icon" id="soundBtn" aria-label="Sound on" aria-pressed="true"></button>
+      <button class="icon" id="statsBtn" aria-label="Your stats"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1" y="8" width="3" height="7" rx="1"/><rect x="6.5" y="4" width="3" height="11" rx="1"/><rect x="12" y="1" width="3" height="14" rx="1"/></svg></button>
+    </div>
+  </div>
+  <h1><span>Pecking Order</span></h1>
+  <p class="sub">Who rules the roost?</p>
+
+  <div class="question" id="question"></div>
+
+  <div id="board">
+    <div class="end hi" id="endHi"></div>
+    <div class="ladder">
+      <div class="rungs" id="rungs" aria-hidden="true"></div>
+      <div class="cards" id="cards" role="list" aria-label="Your order, top to bottom"></div>
+    </div>
+    <div class="end lo" id="endLo"></div>
+  </div>
+
+  <div id="play">
+    <div class="eggs" id="eggs"></div>
+    <p class="msg" id="msg" aria-live="polite"></p>
+    <div class="controls"><button class="btn wide" id="lockBtn">Lock it in</button></div>
+  </div>
+
+  <p class="fact" id="fact" hidden></p>
+  <section class="result" id="result" hidden></section>
+  <footer>A new daily ranking puzzle from <b>Puzzl</b></footer>
+</main>
+
+<div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="sheet">
+  <button class="icon close" data-close aria-label="Close">✕</button>
+  <h2 id="helpTitle">How to play</h2>
+  <p>Put <b>five things in order</b>, top to bottom. Today's question tells you what you're ranking them by.</p>
+  <p><b>Drag</b> a card to move it, or <b>tap two cards</b> to swap them. When you're happy, press <b>Lock it in</b>.</p>
+  <p>Cards in the right place turn green and stay put. The rest you can keep moving.</p>
+  <div class="demo" aria-hidden="true"><i class="y"></i><i></i><i class="y"></i><i></i><i></i></div>
+  <p>You get <b>three tries</b>, one for each egg. When the game ends you'll see the real numbers.</p>
+  <p>Everyone gets the same puzzle. A new one arrives every day at 7am UK time.</p>
+  <button class="btn wide" data-close>Let's play</button>
+</div></div>
+
+<div class="modal" id="statsModal" role="dialog" aria-modal="true" aria-labelledby="statsTitle"><div class="sheet">
+  <button class="icon close" data-close aria-label="Close">✕</button>
+  <h2 id="statsTitle">Your stats</h2>
+  <div class="stats" id="statsGrid"></div>
+  <div class="statlab">Tries when solved</div>
+  <div id="dist"></div>
+  <p style="margin-top:14px">Next coop opens in <b id="statsCountdown">--:--:--</b></p>
+</div></div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ================= Settings ================= */
+const SITE_URL   = 'https://lukeb1991.github.io/Pecking-Order/';  // ← your live address (share text + share image)
+const RESET_HOUR = 7;                                            // ← new puzzle each day at this hour, UK time
+const LAUNCH     = '2026-10-07';                                 // ← date of Coop No. 1 (UK time)  
+const MAX_TRIES  = 3;
+
+/* ================= Puzzles =================
+   One line per day, in order from LAUNCH. Coop No. 1 is the first line.
+   Make new lines with the puzzle maker: open this page with ?make on the end of the address.
+   Each line is scrambled so the answers aren't readable at a glance in view-source.
+   If the list runs out, it starts again from the top, so keep adding lines. */
+const PUZZLES = [
+  '==Qfi4icltWYtBycl1WYnByckVWZMBSZoRHIsMnbvR3ZulGZkF2VgY2bg42bzRXYXBicvR3YpZFI5JGIkV2ajlGcgUmcldHIkJXYvJGILVFIlhGdg42bgMHdlVmc0NHIu9GZu9GTgUGaUJiOiYmIs0VXiAjNjKsIsICZh9mUgQnbltEIkx2TiwiIPi77ju5nwLyWs0lIwQTMjKsIsICbsFWTgwGbhBlIsIyj4++mP+J8isFLdJCM0IzoCLCLiUmchVXcTBichdGbhZWYyRlIsISgm+J8isFLdJCM1MzoCLCLiUmbhxEIrJXYQJCLiMLjfCvIbxSXiADM0MqwiwiIylWYmlXYNJCLikqjfCvIbtlOikmIsICdzVGchVGaDJiOi8GbiwiI0NXZpNWayBlI6ISaoJCLiQmch9mYgkHbvB3bu9WTgsUVgUGa0BibvBSZjlmcwBSeiBSblhGdgIXZkJ3TiojIxJCLikXZu9WbgkHbvB3bu9WTiojI0Jye',
+  '9JiLkJ3bjVmcgQGby92dg0GMwEDIzlGagcmbpJXdkByahVGcgMXaoBycpBSZyV3ZpZGIzdCds9mQg4SZ2lGZgcmbpRnb1hGIhBibpBCZlVGczBCdhhGdgMHdphGI5xmbvBibvNGbhZGIlhGViojImJCLd1lIoBXbgMDMuAjIsICbpFmbzBiblRmchdkIsICjQ+J8isFLdJCaw1GI44yNyICLiQHbvJEIulWYzVlIsIygP+J8isFLdJCaw1GI1QjIsICZuV3bolXZydkIsISlQ+J8isFLdJCaw1GIwcjIsICahRXZlh2QiwiIGC5nwLyWs0lIoBXbgsCMwIjIsIibvNGbhZGIl5WaydWZyVGUiwiIFa6nwLyWbpjIpJCLiQ3cld3bsNlI6IybsJCLiQ3clR3chZkI6ISaoJCLiQWZlB3cgA3b0BSeiBSblhGdgIXZkJ3TiojIxJCLiMnclZ3btBCdzFmRiojI0Jye',
+  '==Qfi4CczlmcDBSZ0FGbvN2boNEIzdSZlJHdud3bSBychBSZmlGbgQWZ0JXY0NHI0F2S0l2SiojImJCLd1lI3YTOxICLigXa3RlIsIiol+J8isFLdJSNzkTMiwiI0F2S0l2SiwiI0S5nwLyWs0lIyMTOxICLiIXYiBycyFWTiwiIQq6nwLyWs0lI1ATOxICLisGbp1EI5JXahREI5JXdiRWYDJCLiwpkfCvIbxSXiYjN4EjIsISbhVmcDBSZ0FGbvN2boNEIzdSeyZkIsIyqN+J8is1W6ISaiwiI0NXZ3VmTiojIvxmIsICdzVGZs9kI6ISaoJCLiUGbhNHIu9GI05WZ3BCdzJXamBSelhGdg4WZodHI5JGIzJXYiBSZ0FGbvN2boNGIlNXZoRHIyVGZy9kI6ISciwiIzV2ZhByYvh2QiojI0Jye',
+  '==Qfi4ibp92YgEzoCDSYg4WYoRHIyVGZpdHIzlGIwJDIlxmYtVHagEkI6IiZiwSXdJSbtBCNuMjMiwiIul2bjBSMjKsIsISmq+J8isFLdJSbtBSNuQjMiwiIwBTMiwiIZq6nwLyWs0lIt1GI54SNyICLiAnMiwiIZq6nwLyWs0lIt1GIz4yNyICLiAHM1ICLikpqfCvIbxSXi0WbgQjL4IjIsIibp92YgIzoCLCLikpqfCvIbtlOikmIsICdzV2dvJnch5kI6IybsJCLiQ3clRWaXJiOikGaiwiIoRHZpdHI5JGIz5WavNGIlNXZoRHIyVGZy9kI6ISciwiIldmbhh2YgU2cv9GTiojI0Jye',
+  '==Qfi4icvJXZ1FnbvNEIlhGdg0WYpxGbpdFI5JGIkVGdyFGdzBychdHIsIXZ39GVgUGdph2VgUGa0BCLu9GZu9GTgY2bgIXZ39GVgUGa0BiZvBCdyFGcgQ3clRGbvBSZoRlI6IiZiwSXdJSN3YTMiwiIpMXmAKeehR2b0hCIsFmckVGa0F2QgM3JsVXYQBCdTJCLi0YlfCvIbxSXiUDNyEjIsISKoNmc1h2YgMXmAKeehR2b0hCI5VmYiFEIyVGdz5WatR3cldlIsIiqbKuIbxSXigzNwEjIsIibvRmbvxEIm9GIyV2dvRlIsICsP+J8isFLdJiMyEDIEFkIsICbsF2VgM3JuFWayRWYIJCLiE7pfCvIbxSXiMkQgADMwMDIuMmIsISZn5WZoVmbvR3UiwiIoq6nwLyWbpjIpJCLiQ3cldXZOJiOi8GbiwiI0NXZkx2TiojIphmIsICZlRnchR3cgcmbpRGbpVnYg4WZodHI5JGItVGa0BiclRmcPJiOiEnIsICdzFGbg8GdgQHbpVnQiojI0Jye',
+  '=0nIuQnbhhGclxWZg4WYgMXYgg2Y11GIzFGIodWaldHIuF2YgUmbvxWYgUWdn52b0BycnUGbhh2dgUWdsJGIBJiOiYmIs0VXic2agAjNx4nIsISYsxWay92RiwiINa6nwLyWs0lIntGIwUDN+JCLiIXYlJGIyFGbvBlIsIyj4+OhdKejAK+uQ+J8isFLdJycl5mbvRHI14SM+JCLi8GcwlGSiwiIba6nwLyWs0lIzVmbu9GdgYjfiwiI05WYoBXZsVGIuF2YpJnZBJCLigJkfCvIbxSXiMXZu52b0BCM1EjfiwiIlxWYodHIlVHbCJCLisIkfCvIbtlOikmIsICdzVGdodWaMJiOi8GbiwiI0NXZpZXYlhkI6ISaoJCLiQHanlWZ3BCdsVHZhBCbhNWawlHdgknYg0WZoRHIyVGZy9kI6ISciwiIzRHanlWZ3lndhVGSiojI0Jye',
+  '=0nIuQDIsVmbuFGaDBibvBib39GazBSZt1WYyd2byBHI0NncpZGI5JXZ2BSZoRHIzF2dg42dvRGduV3bDJiOiYmIs0VXicDMwIjIsISelNWY0NFImAibpZXYHJCLiwomfCvIbxSXiUDO5EjIsIycyVGZuVEdzFWRiwiIPi77Y+4nwLyWs0lIygTOxICLi42dvRGduV3bDJCLi8IuvH7jiLyWs0lIzYTOxICLi8GaXBicvR3YvRkIsIipf+J8isFLdJCM2kTMiwiI0VWZyR3Ug42bpRXYu9mcvNkIsIyuN+J8is1W6ISaiwiI0NXZ3VmTiojIvxmIsICdzVGZs9kI6ISaoJCLiQWZylWYgQ3cylmZgkXZoRHIuVGa3BSeiBSblhGdgIXZkJ3TiojIxJCLiM3YpN3chx2YgkHbsVGViojI0Jye',
+  '=0nIusUVgUGa0BibpByZulGZslWdiBCdzVGbsFGdgUGa0BycpBCZyFGaTBSZoRlI6IiZiwSXdJSbgAjMiwiIoRncv5EIlhGdgY2bgwWZn5WQiwiI8G5nwLyWs0lItBiM1ICLi4Wb1x2bDBycn42bzxWZOJCLi87lfCvIbxSXi0GI2kjIsISKuVmQgcWaChCIyV2dvRFIoRXZiFmepxWRiwiIPi77wW5nwLyWs0lItBCO1EjIsIicld3bUBCbv9GcrNWYsJkIsISoO+J8isFLdJSbgATMzICLiQmchh2UgUGaUJCLi8Iuvn5jfCvIbtlOikmIsICdzVGdy9GaTJiOi8GbiwiI0NXZsxWYUJiOikGaiwiI0h2ZpVGagknYgM3ayFWbk5WYsBSZzVGa0BiclRmcPJiOiEnIsIyc0h2ZpVGagI3bmBCZhVGSiojI0Jye',
+  '==Qfi4CZl52dvJ3YgIXZ2VmbgMXY3BCZuFGI2MTOxAibpBSZu9mcoRHIlhGdgAXdgUmdhdGIJlUSWBCZyF2dkVkI6IiZiwSXdJyc5FGZgYjMzICLikUSJZFIkJXY3RWRiwiIRG5nwLyWs0lIzJXYllHI3MjIsISSJlkVgkncuVGSiwiIRG5nwLyWs0lIzJXYllHI5UjIsISSJlEIldmcvV2RiwiIRG5nwLyWs0lIzJXYllHIzYjIsISYpJ3b0NWaWJCLiEZkfCvIbxSXiMnchVWegAzNiwiIJlEIoRXZiFmepxWRiwiIRG5nwLyWbpjIpJCLiQ3clRncvh2UiojIvxmIsICdzV2Zu9GTiojIphmIsICZl52ZpVmcgkXZoRHIn52bsBydvhGI5JGIzh2YyFmbv1GIlNXZoRHIyVGZy9kI6ISciwiIn5WaLBSZoRHIlZXasByZu9GTiojI0Jye',
+  '9JiL2ATOxAibpBycyVWehxGcgMTMg8GdgUTMg02byZGIz1WYlRHIzRXagQXdjBSZ1dWYlxGI5J2Z1JlI6IiZiwSXdJSNiwiIsxWYiRXZrNXYCJCLiA4jfCvIbxSXicjIsICbsFmY0VmTiwiIFW6nwLyWs0lIxEjIsICbsFmY092bGJCLi0rmiLyWs0lIzEjIsISZ1dWYlxGI5J2Z1JlIsISiP+J8isFLdJSNxICLi42bp5WdgknYnVnUiwiIJ+4nwLyWbpjIpJCLiQ3cldXZGJiOi8GbiwiI0N3bNJiOikGaiwiI0JXdvNGIy9GIoNGdpBHIlhGdg42bgUGZpNHIyVGcgMncllXYsBHI5JGIzRncvB3cgU2clhGdgIXZkJ3TiojIxJCLiMHbh92ZgQWY1F3UiojI0Jye',
+  '9JiL5xGbhVmcgwyZulGd0lmRg4yZnVGIuFGIt9mcmBCZlh2Y0FGagQXYoRHI0VGcgEGIzF2dgkGajR3bnFWbhRFIlhGViojImJCLd1lI3ADMyICLiUmbvhGUpJCLiE7kfCvIbxSXiEDMwIjIsICZvBVaiwiIn64nwLyWs0lI2kTOxICLikGajR3bnFWbhRlIsIiml+J8isFLdJSO4kTMiwiI59mQgUWbhdkIsIirO+J8isFLdJSO3kTMiwiIuFWbrxWYXBSeu92UiwiI8O5nwLyWbpjIpJCLiQ3cldXZOJiOi8GbiwiI0NXZkx2TiojIphmIsICZlNXYlxWZyBSZyV2dgkXZoRHIuVGa3BSeiBSblhGdgIXZkJ3TiojIxJCLiMHdldGZhdGIlZXYo1CdzVXTiojI0Jye',
+  '9JiLtF2byByb0BCdodWayBSZoRHIul2dgQWZwxWZoBCd192YTBiclRmbptEIu9GIzNXYwNXZyRHIzNXYtBiMzkTMgUGaUJiOiYmIs0VXi0GI2MjNiwiI0V3bjNFIyVGZul2SiwiI+W6nwLyWs0lItBiN4gjIsIibhZEI5BiblBlIsIyj4+OsbKuIbxSXi0GI4cTOiwiIltWaQBCbsVmZhN2UiwiIPi77wup4isFLdJSbgUDOwwSMiwiIp42bkd3buNFKgEmZkRWeXBicZJCLi8IuvD7miLyWs0lItBSN0MDLxICLiMXa2VmTg4WZCJCLi8IuvT5jfCvIbtlOikmIsICdzV2dvxkI6IybsJCLiQ3clh2ZphkI6ISaoJCLiQHanlWZoBSeiByculWY05Wdv1GIlNXZoRHIyVGZy9kI6ISciwiIulWY0lmcCByahVGUiojI0Jye',
+  '==Qfi4CZsJ3b3BSZoRHIulGIiVHbjBCbsFmY092bmBCbh52bpN3clZ2byBHI0NXZkx2bgUGa0BSZyFGI5Rnb192QgMHd09mTiojImJCLd1lIykDOxICLiw2bvBnclZXaMJCLiYKkfCvIbxSXiYDO4EjIsICbh5WZzJXQiwiI0S5nwLyWs0lI0cDOxICLiEGbslmVg42b0NXQiwiIBa6nwLyWs0lI1YDOxICLiQ3clJ3bGBSbhh2ZulGd09mTiwiIzy4nwLyWs0lIyYDOxICLikHduV3bDByc0R3bOJCLisqmiLyWbpjIpJCLiQ3cldXZOJiOi8GbiwiI0NXZkx2TiojIphmIsICZlRmb19mZgUmcldHI5VGa0Biblh2dgknYgMnY1x2YgwGbhJGdv9mZgU2clhGdgIXZkJ3TiojIxJCLiYmZv1yajl2SiojI0Jye',
+  '==Qfi4yQwKMIu9WasxWatBSNxACZuV3byFGIzlGIoNWaodHIsUmcvNGIzRXaggGdpdHIkVmchBXbvNGI09GczBCbv92YgEGIzlGIlNWYmJXdzBycn4WdTBSZoRlI6IiZiwSXdJyQwK8NzICLikHZvJGIuFWb1hkIsISjn+J8isFLdJyQwKMMwEjIsISZsRHdltGIn5Wasl2bCJCLiY5qfCvIbxSXiMEsCDTNy4nIsICbsVnZg42bg4WZ29kIsISlN+J8isFLdJyQwKMMwEDLx4nIsISY2FGTiwiILy4nwLyWs0lIDBrwwATNsUjfiwiIuV3UgUGa0BiZvBSZjFmZyV3UiwiIPi77Aip4is1W6ISaiwiI0NXZs92bDJiOi8GbiwiI0NXZ0R3bIJiOikGaiwiIlJXd0FmclBXblRHI5JGItVGa0BiclRmcPJiOiEnIsICdhVGagUGa0BCc1BibyVHViojI0Jye',
+  '9JiLu9Wbpxmb5xGUgwibpFGduV3btBCazxWZXBSZtF2cgUGa0BibvBSZzlmcggGdvJGIll3VgUGa0BCZuFGIuJXZ2V2UgUGaUJiOiYmIs0VXiMXZslWbgMzNiwiIl5WeUJCLikIjfCvIbxSXiMXZslWbgUTNxICLiUWeXJCLi8JkfCvIbxSXiMXZslWbgUDOxICLiQnblJHViwiIGa6nwLyWs0lIzVGbp1GI1EjMiwiIzVWbhhGViwiIjq5nwLyWs0lIzVGbp1GIwIjMiwiIuJXZ2V2UiwiIKy4nwLyWbpjIpJCLiQ3clRncvh2UiojIvxmIsICdzV2Zu9GTiojIphmIsICa0dmblxGI5JGIzJXZ2lmcgU2clhGdgIXZkJ3TiojIxJCLiIXZ2lmcgUGa0Bib39GRiojI0Jye',
+  '=0nIukncvR3cgMXZtx2bIByaj9GbyVGaTBCdzJXamBSeyVmdgUGa0BychdHI0VGbyF2YTBibpBSekVHdTBSQiojImJCLd1lI3kTOxICLiUmbvR3UgM3JyVGaw92cvxWaoBFIlhGdgQmbhBiclRHdvBFI5JnchhkIsISoaKuIbxSXiczM5EjIsICdpJmYvhEIlhGViwiIJC5nwLyWs0lI3gDOxICLiQXZsJXYjNFIulGI5RWd0NFIBJCLi0IlfCvIbxSXiMDN4EjIsICbvJXYDBych1GdzlmcoNEIBJCLisbkfCvIbxSXiMTM4EjIsISZjlGZ1pWZyBFIk5WYgUGZpJHUiwiINK5nwLyWbpjIpJCLiQ3cldXZOJiOi8GbiwiI0NXZkx2TiojIphmIsICZlh2cpxmY1BHI0NncpZGIlJXZ3BSelhGdg4WZodHI5JGIzt2bvJGIlNXZoRHIyVGZy9kI6ISciwiIz1mcvd3av9mQiojI0Jye',
+  '9JiLyFWZ5BSYg02YgEDI0V3biFGI39mcnBycrJXYoNHIk5WYs5WZlJ3RiojImJCLd1lI5FGZgEjfiwiIpQHb1RWYoASesZWeh1kIsICsq+J8isFLdJycyFWZ5BiMx4nIsIyZvRkIsIitQ+J8isFLdJycyFWZ5BCM34nIsICduFGawVGbFJCLigJkfCvIbxSXiMnchVWegsCM1EjIsISZzl2b0J3b0BCduFWaHJCLiIKkfCvIbxSXiMnchVWegADM04nIsIyayFGazBCZuFGbuVWZydkIsICim+J8is1W6ISaiwiI0NXZ0J3boNlI6IybsJCLiQ3cldmbvxkI6ISaoJCLiUmdpxGIuF2YgkXZoRHIn52bsBydvhGI5JGItVGa0BiclRmcPJiOiEnIsIyclZXasByZu9GTiojI0Jye',
+  '==Qfi4iclRXawVnSgUGZpNnbpBycoRnchVEIwAzMsEDI0V3biFGI0lmZgQGb192YgU3bZJiOiYmIs0VXi02agQzN0wyMiwiIu92bNBSZoRlIsISlM+J8isFLdJSbrBSO3cDL2ICLiMnch1kIsICtU+J8isFLdJSbrBiM0cDLyEjIsICa0JXYFJCLi0IjfCvIbxSXi02agAjN0wiNxEjIsIibyVHdhNlIsIyqS+J8isFLdJSbrBCMygDL5MTMiwiIyVGdpBXdKJCLiApqfCvIbtlOikmIsICdzV2dvJnch5kI6IybsJCLiQ3clRWaXJiOikGaiwiIoRHZpdHI5JGItVGa0BiclRmcPJiOiEnIsIycyVGcw9GagU2YhB3UiojI0Jye',
+  '=0nIuETO5EDIulGIulWYnFGIk5WYgUzN5EDIulGI6U2YpdHdgUmbvBiclJWb15GIvRHI05WZ3BSek92cwFGaSBibhlWblh2bCJiOiYmIs0VXicTMwIjIsISKuFmclVGaTBCZFhCI19WWgY2bgUGchh2UiwiI264nwLyWs0lIxEDMyICLikSZsVGZBhCI19WWgU2apxEIl52bl12bTJCLiQqjfCvIbxSXiYTO5EjIsISKzxmcpdEIlNWawNFKgUmYh5mbhdlIsIygS+J8isFLdJSN3kTMiwiIp4WZlVXUoASek92cwFGaSBibhlWblh2bCJCLikrjfCvIbxSXiMjN5EjIsISKzVGb0FWZCBSZoRFKgU3bZByclZ3bMBSZoNlIsICuO+J8is1W6ISaiwiI0NXZ3VmTiojIvxmIsICdzVGZs9kI6ISaoJCLiQXdvBSZtF2YgkXZoRHIuVGa3BSeiByclx2Zul2cgU2clhGdgIXZkJ3TiojIxJCLiMXZu9GIyVmYtVnTiojI0Jye',
+  '==Qfi4ySVBSZoRHIulGItVXakFGdzBiclhGdvBSeuFGIuFGa0Byc0FWZzBSZy9WbgMXYoBSelxmYtV2ViojImJCLd1lIwADMsIDN+JCLismchBFIhxGbpZlIsISgm+J8isFLdJCMwADLxYjfiwiIkxWZpZmbBJCLiQLlfCvIbxSXiADMwwCN34nIsICZy9mZmFmcUBCZs9kIsICiY+J8isFLdJCMwADLygjIsISbhhmblt2YpdHViwiIJ+4nwLyWs0lIwADMsATOiwiI5VGbi1WZXJCLi8Iuv/5jfCvIbtlOikmIsICdzVGbsFWbTJiOi8GbiwiI0NXZndWaCJiOikGaiwiI5RXajFGchNGI5JGIzRmb19mcnBSZzVGa0BiclRmcPJiOiEnIsISZzV3boBCbsVnRiojI0Jye',
+  '=0nIuMHZlVGTg4WagwGbhR3cgQXZrJXYtBSYgMXYg4WYnVmYgIXZj5WZwNFImAycrJXYNJiOiYmIs0VXikzM5EjIsIycndWZydkIsICkl+J8isFLdJSOxkTMiwiIvN2clRlIsIikb+J8isFLdJCN4gTMiwiIyV2YuVGcTBiJgM3ayFWTiwiIPi77Nu5nwLyWs0lI0IDOxICLiknc1JGZhNkIsIyqN+J8isFLdJiNwcTMiwiIzdmbp5Wa3RlIsISlYKuIbtlOikmIsICdzV2dl5kI6IybsJCLiQ3clRGbPJiOikGaiwiIkVGZuV3bmBSZyV2dgkXZoRHIuVGa3BSeiBSblhGdgIXZkJ3TiojIxJCLiMXZtFmbgQXZlJHdzBCanlGSiojI0Jye',
+  '==Qfi4icllmcyFmYgQmb192cgUGa0ByahVmciBSesxWYpNWamZ2bg8GdgIXYjBCdzJXamBSZoRHIl1WYjVmYgM0UTBCdzVncoRFI3kTOxAibJJiOiYmIs0VXigGctBCMwEjIsIibh12c092YTByZulWesZkIsIiga+J8isFLdJCaw1GI2gTMiwiIyFGdz9mc1VkIsICha+J8isFLdJCaw1GIwMjM+JCLiIXYjBSMgEGb11mcvZkIsIyj4+ujP+J8isFLdJCaw1GIzYzNiwiIDN1UgQ3c1JHaUJCLiAomfCvIbxSXigGctBCM1MDLx4nIsISZkJ3bj52bDJCLi8IuvjIniLyWbpjIpJCLiQ3cld3bsNlI6IybsJCLiQ3clR3chZkI6ISaoJCLiQWZlB3cgA3b0BSeiBSblhGdgIXZkJ3TiojIxJCLiQWZlB3cgI3bmBCZlVmTiojI0Jye',
+  '9JiLzVGZvNXawVGIyEDI0NXdqBicvZGIuFmcgMncld3bUBSe0x2dhZkI6IiZiwSXdJCOwAjMiwiIzJXZuVWZ3RXZi5WSgUGaUJCLiIpjfCvIbxSXiEDMwIjIsISZjlmZm9EIlhGViwiIPi77Ce5nwLyWs0lIxgTOxICLiMXZzJ3bIBCZuFGIzx2bvZEI5xmbPJCLiApmfCvIbxSXiUzN5EjIsIycyV2dvRFI5RHb3FmRiwiIo+4nwLyWs0lI4YTOxICLikXbyFEIzdCZhRkIsIilq+J8is1W6ISaiwiI0NXZ3VmTiojIvxmIsICdzVGZs9kI6ISaoJCLiQWZylWYgQ3cylmZgkXZoRHIuVGa3BSeiBSblhGdgIXZkJ3TiojIxJCLiQGbvdGIt92Y0l2UiojI0Jye',
+  '==Qfi4yb0VHbQBiZvBSZjFmZyV3cgUGbvh2dgUGa0BibhhGdgIXZndWaiBycpBSYpN3c1JlI6IiZiwSXdJisC32agADMwwyM0IjIsISbvR2Zul2SgQWZ0lmbVJCLic6hfCPrH+J8isFLdJisC32agADMwwyN1MjIsISeuFWbyV2RiwiIqe4nwn6hfCvIbxSXiIrwttGItNjLzICLiEWak5WSiwiIze4nw76hfCvIbxSXiIrwttGItdjL3ICLiEWasFmc0NXdBJCLio7hfCvpH+J8isFLdJisC32ag0WMucTMiwiIhl2czVnUiwiI6e4nwf7hfCvIbtlOikmIsICdzVGbsFWbTJiOi8GbiwiI0NXZndWaCJiOikGaiwiIhVmchBSeiBycllmc05WdvNGIlNXZoRHIyVGZy9kI6ISciwiItF2byByb0BSbv9mUiojI0Jye',
+  '9JiLyFWZ5BSYg4WagM3alV2dgITNgwyckJXYjBiM1IiOiYmIs0VXiQTMiwiI0h2Zp5Gdy9mZgEGIulGIzlXYEJCLiU4kfCvIbxSXigjMiwiI0V2cggXaz1SZsJWdvRGIhBibpBycl9mbp12bEJCLiIrjfCvIbxSXiADNiwiIkJXYvJGI5x2bw9mbv1EIhBibvByclNWYwNlIsISqO+J8isFLdJiM1ICLikycyV2avpGIv5GKgs2YlRGIhBibpByckJXYDJCLi84gfCvIbxSXiQjNiwiIkJXYvJ2czVGajBSYg42bgMXZyFWdxNlIsIyj4++nZKuIbtlOikmIsICdzV2dlZkI6IybsJCLiQ3cv1kI6ISaoJCLiUmchBSZyVGa0BSeuFWbgc3boBSeiBSblhGdgIXZkJ3TiojIxJCLiQHanlmbgMXZtF2RiojI0Jye',
+  '=0nIu42bk52bMBibpBCdv5GIsMXZtFGaU1ibv1SelxmblhEI0FGIkV2dvJHIzF2dgU2YhJFI0F2bCBCdzJXamBSZoRlI6IiZiwSXdJSM4kTMiwiIu9Ga0Fmch1EIu9GZu9GTiwiID+4nwLyWs0lI3cDOxICLi42bkVGbi1WaXJCLi4rjfCvIbxSXiAjN4EjIsIiblB3TgUGaUJCLiM7miLyWs0lI5MDOxICLiwWYu9Wa0FmTgQmbhJ3RiwiIH+4nwLyWs0lI5IDOxICLiU2YhJFI0F2bCBSZoRlIsIyoa+J8is1W6ISaiwiI0NXZ3VmTiojIvxmIsICdzVGZs9kI6ISaoJCLiQGblhGI0NncpZGIlJXZ3BSelhGdg4WZodHI5JGIzRnblZXZgU2clhGdgIXZkJ3TiojIxJCLiQXdvBSZtlGdgQ3cylmRiojI0Jye',
+  '9JiLLVFIlhGdg4WagkHdpNGI0NXZndWaiBCZu92YlNHIlhGdgMXag0WYodmbp1mcpJkI6IiZiwSXdJCMwADLwMTM+JCLiIXZ0VGeFJCLio6miLyWs0lIwADMsAjNz4nIsIiZmlGZyF2QiwiIJC5nwLyWs0lIwADMsAjM24nIsIydvd2chx2RiwiIPi77ny4nwLyWs0lIu9WasxWatBSMuEjfiwiItFGan5WatJXaCJCLi06jfCvIbxSXi42bpxGbp1GI44CO+JCLi42bk52bMJCLiEqjfCvIbtlOikmIsISZsB3blBHI0NXZ3VmRiojIvxmIsISZsB3blBHI0N3bNJiOikGaiwiIu9Wa0FGb1B3bwBSeiBycllGdpNGIlNXZoRHIyVGZy9kI6ISciwiIlt2btNHInlmQiojI0Jye',
+  '==Qfi4CZsJ3b3BSZoRHIulGI5F2dslWYyBCZuV3bydmclRmb1BCdzJXamBSZoRHIzF2dgwyM2gTMg4WagQWZuVGcvBCLl5WasBibhRXas9GcvJHdl1EIlhGViojImJCLd1lIyIDMyICLiUmbpxGIoRXZiFmepxWRiwiIcK5nwLyWs0lI0kTOxICLiwWZu5WdUBCbl5mbhh2QiwiIGq5nwLyWs0lIwkDOxICLiU2ZklmcCBCa0J3bGJCLikIjfCvIbxSXiMjN4EjIsISZulGbgUmY1RFIu9GZu9GTgQ3cylmRiwiIHq5nwLyWs0lI1IDOxICLikXY3xWahJFIu9Gdn5WasJXYENJgi72b0t2YvR3UiwiICq5nwLyWbpjIpJCLiQ3cldXZOJiOi8GbiwiI0NXZkx2TiojIphmIsICZl5WZw9GI5VGa0Biblh2dgknYg0WZoRHIyVGZy9kI6ISciwiIzxWahJHIlhGdg42TiojI0Jye',
+  '==Qfi4CZsJ3b3BSZoRHIulGIk5WYsNXagQ3cld2ZpJGIoRnbp5GIlhGdgMXag4WahRXayJEI0FWZydkI6IiZiwSXdJisC32agADOzICLiQHanl2VgY2bgUGbzlkIsIStbKuIbxSXiIrwttGIycTNiwiIuFWTgY2bgUGbzlkIsICiQ+J8isFLdJisC32agQTM3ICLikXZzVGbn5WQiwiIJy4nwLyWs0lIyKcbrBSMyQDL0gjIsICZuFGblJXSiwiIPi77Yip4isFLdJisC32agEzMzwSOwIjIsIibpFGdpJnQgQXYlJ3RiwiIne4nwz6hfCvIbtlOikmIsICdzVGbsFWbTJiOi8GbiwiI0NXZndWaCJiOikGaiwiIhVmchBSeiByck5WYsNXagU2clhGdgIXZkJ3TiojIxJCLiUmZpxGIk5WYsNXSiojI0Jye',
+  '9JiLhlmcvR3YpZFIuVWZ1FFIn5WdvlHIhBiZvBSZslmZvJHcgEGIkV2dvh2cgs2YhxmQgknbuVGUgUGaUJiOiYmIs0VXikDO5EjIsIiYldFIlRWaXBCZsJ3bXJCLiAJjfCvIbxSXiYjM5EjIsISKv1WZkBCdzJXamhCIu9WazlmdlxWZUJCLio7kfCvIbxSXiYzN4EjIsISZu9GawVGblRlIsIyj4+ujYKuIbxSXiADN4EjIsICctFGdzByajFGbCBSeu5WZQJCLi8IuvnIniLyWs0lI0ADOxICLiUmdpR3bt92YvxGI5F2dslWYyBSbhVGdTJCLiIomfCvIbtlOikmIsICdzV2dl5kI6IybsJCLiQ3clRGbPJiOikGaiwiIkVmchVGcwFGI0NncpZGI5VGa0Biblh2dgknYg0WZoRHIyVGZy9kI6ISciwiIzFWZklGI0h2ZpJnQiojI0Jye',
+];
+
+/* ================= Helpers ================= */
+const $ = id => document.getElementById(id);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+const encode = p => btoa(unescape(encodeURIComponent(JSON.stringify(p)))).split('').reverse().join('');
+const decode = s => JSON.parse(decodeURIComponent(escape(atob(s.split('').reverse().join('')))));
+
+function londonNow() {
+  const o = {};
+  new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/London', year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit', hourCycle:'h23'})
+    .formatToParts(new Date(Date.now() - RESET_HOUR * 3600e3)).forEach(p => o[p.type] = p.value);
+  return o;
+}
+function dayNumber() {
+  const o = londonNow(), [y, m, d] = LAUNCH.split('-').map(Number);
+  return Math.max(1, Math.round((Date.UTC(+o.year, +o.month - 1, +o.day) - Date.UTC(y, m - 1, d)) / 864e5) + 1);
+}
+function secondsToNext() { const o = londonNow(); return 86400 - (+o.hour * 3600 + +o.minute * 60 + +o.second); }
+const hms = s => [s / 3600 | 0, (s % 3600) / 60 | 0, s % 60].map(n => String(n).padStart(2, '0')).join(':');
+function rng(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffled(arr, rand = Math.random) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+/* A starting order with nothing already in the right place */
+function scrambled(rand) {
+  let a; do { a = shuffled([0, 1, 2, 3, 4], rand); } while (a.some((v, i) => v === i));
+  return a;
+}
+const dateFor = n => { const [y, m, d] = LAUNCH.split('-').map(Number); return new Date(Date.UTC(y, m - 1, d + n - 1)); };
+
+/* ================= Puzzle + state ================= */
+const params = new URLSearchParams(location.search);
+const TEST = params.get('test');   // practice preview from the puzzle maker: nothing is saved
+const DAY = dayNumber();
+let P = null;
+try { P = TEST ? decode(TEST) : decode(PUZZLES[(DAY - 1) % PUZZLES.length]); } catch (e) { P = null; }
+if (P && !(Array.isArray(P.i) && P.i.length === 5)) P = null;
+
+const KEY = 'pecking-state', SKEY = 'pecking-stats';
+// order[slot] = item, where item 0 belongs at the top. tries = every order locked in.
+const fresh = () => ({day: DAY, order: scrambled(rng(DAY * 7919 + 31)), locked: [], tries: [], status: 'play'});   // status: play | won | lost
+let S = (() => {
+  if (TEST) return fresh();
+  const s = store.get(KEY, null);
+  const ok = s && s.day === DAY && Array.isArray(s.order) && [...s.order].sort().join() === '0,1,2,3,4' && Array.isArray(s.tries);
+  return ok ? s : fresh();
+})();
+const save = () => { if (!TEST) store.set(KEY, S); };
+const blankStats = () => ({played: 0, wins: 0, streak: 0, best: 0, lastDay: 0, dist: [0, 0, 0]});
+let stats = Object.assign(blankStats(), store.get(SKEY, {}));
+const streakNow = () => stats.lastDay >= DAY - 1 ? stats.streak : 0;
+
+const done = () => S.status !== 'play';
+const triesLeft = () => MAX_TRIES - S.tries.length;
+const rightIn = t => t.filter((v, i) => v === i).length;
+const lastTry = () => S.tries[S.tries.length - 1] || [];
+let sel = -1, busy = false, drag = null, dragEnded = 0;
+
+/* ================= Sound ================= */
+let soundOn = store.get('pecking-sound', true), actx = null;
+function ac() {
+  if (!soundOn) return null;
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); } catch (e) { return null; }
+  return actx;
+}
+function beep(freq, dur, type = 'sine', gain = .04, delay = 0, slideTo) {
+  const c = ac(); if (!c) return;
+  const o = c.createOscillator(), g = c.createGain(), t = c.currentTime + delay;
+  o.type = type; o.frequency.setValueAtTime(freq, t);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(gain, t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + dur + .02);
+}
+const sfx = {
+  peck:  () => beep(900, .05, 'triangle', .035, 0, 600),                       // a quick peck
+  slide: () => beep(420, .04, 'triangle', .02, 0, 520),
+  right: n => beep(523 * Math.pow(1.19, n), .2, 'triangle', .045),          // a little higher for each green
+  wrong: () => beep(190, .12, 'triangle', .03, 0, 150),
+  crack: () => { beep(2200, .02, 'square', .025, 0, 900); beep(1400, .03, 'square', .02, .05, 500); },
+  win:   () => [523, 659, 784, 1047, 1319].forEach((f, i) => beep(f, .28, 'triangle', .045, .1 + i * .1)),
+  lose:  () => { beep(300, .25, 'sawtooth', .03); beep(220, .4, 'sawtooth', .03, .22); }
+};
+const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>';
+function paintSound() {
+  $('soundBtn').innerHTML = SPEAKER + (soundOn ? '<path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>' : '<path d="M17 9l5 6M22 9l-5 6"/></svg>');
+  $('soundBtn').setAttribute('aria-label', soundOn ? 'Sound on' : 'Sound off');
+  $('soundBtn').setAttribute('aria-pressed', soundOn);
+}
+
+/* ================= Rendering ================= */
+function say(t, type) { const m = $('msg'); m.textContent = t; m.className = 'msg' + (type ? ' ' + type : ''); }
+function toast(t) { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 1800); }
+const ROSETTE = (n, col) => `<svg viewBox="0 0 40 40" aria-hidden="true"><path fill="${col}" stroke="#2a1572" stroke-width="1.8" stroke-linejoin="round" d="${rosettePath()}"/><circle cx="20" cy="20" r="11.5" fill="none" stroke="rgba(42,21,114,.45)" stroke-width="1.2"/></svg><b>${n}</b>`;
+function rosettePath() {
+  // twelve scallops round a circle, like a show rosette
+  let d = '';
+  for (let k = 0; k < 12; k++) {
+    const a0 = k / 12 * Math.PI * 2, a1 = (k + 1) / 12 * Math.PI * 2, am = (a0 + a1) / 2;
+    const p = (a, r) => `${(20 + Math.cos(a) * r).toFixed(2)} ${(20 + Math.sin(a) * r).toFixed(2)}`;
+    d += (k ? ' L' : 'M') + p(a0, 16.5) + ' Q' + p(am, 22.5) + ' ' + p(a1, 16.5);
+  }
+  return d + 'Z';
+}
+const RANK_COL = ['#ff4d6d', '#4c9bff', '#ffc928', '#2fd47a', '#ff8fd1'];
+const ARROW_UP = '<svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7 2l5 7H2z"/></svg>';
+const ARROW_DN = '<svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7 12L2 5h10z"/></svg>';
+const GRIP = '<svg class="grip" viewBox="0 0 18 22" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="1.8"/><circle cx="13" cy="5" r="1.8"/><circle cx="5" cy="11" r="1.8"/><circle cx="13" cy="11" r="1.8"/><circle cx="5" cy="17" r="1.8"/><circle cx="13" cy="17" r="1.8"/></svg>';
+
+const cardEl = it => $('cards').querySelector(`[data-it="${it}"]`);
+const isLocked = slot => S.locked.includes(slot);
+const step = () => { const c = $('cards').firstElementChild; return c ? c.offsetHeight + 8 : 70; };
+
+function buildBoard() {
+  $('kicker').textContent = TEST ? 'Practice preview' : `Coop No. ${DAY}`;
+  $('question').innerHTML = `<b>${esc(P.t)}</b><span>${esc(P.q)}</span>`;
+  $('endHi').innerHTML = ARROW_UP + esc(P.hi);
+  $('endLo').innerHTML = ARROW_DN + esc(P.lo);
+  $('rungs').innerHTML = [0, 1, 2, 3, 4].map(i => `<div class="rosette">${ROSETTE(i + 1, RANK_COL[i])}</div>`).join('');
+  $('cards').innerHTML = P.i.map((x, it) => `<button class="card" role="listitem" data-it="${it}"><span class="em" aria-hidden="true">${esc(x[0])}</span><span class="nm">${esc(x[1])}</span><span class="val">${esc(x[2])}</span>${GRIP}</button>`).join('');
+}
+function layout(skip) {
+  const st = step();
+  S.order.forEach((it, slot) => {
+    const el = cardEl(it); if (!el || it === skip) return;
+    el.style.transform = `translateY(${slot * st}px)`;
+    const name = P.i[it][1];
+    el.setAttribute('aria-label', done() ? `${slot + 1}: ${name}, ${P.i[it][2]}` : `${slot + 1}: ${name}${isLocked(slot) ? ', locked in' : ''}`);
+  });
+}
+function paintCards() {
+  const fin = done(), lt = lastTry();
+  S.order.forEach((it, slot) => {
+    const el = cardEl(it);
+    const ok = fin ? lt[it] === it : isLocked(slot);
+    el.classList.toggle('ok', ok);
+    el.classList.toggle('miss', fin && !ok);
+    el.classList.toggle('sel', !fin && sel === it);
+    el.disabled = fin;
+  });
+  $('board').classList.toggle('done', fin);
+}
+const EGG = '<svg viewBox="0 0 22 28" aria-hidden="true"><path class="shell" d="M11 1C5.5 1 1 9.5 1 16.5 1 23 5.5 27 11 27s10-4 10-10.5C21 9.5 16.5 1 11 1z"/><path class="crack" d="M2 15l4-2.5 3 3 3.5-3.5 3 3 4.5-2.5"/></svg>';
+function renderEggs(cracking) {
+  const l = triesLeft();
+  $('eggs').innerHTML = `<span>Tries left</span>` + Array.from({length: MAX_TRIES}, (_, i) =>
+    `<span class="egg${i < l ? '' : ' used'}${i === cracking ? ' cracking' : ''}">${EGG}</span>`).join('');
+  $('eggs').setAttribute('aria-label', `${l} ${l === 1 ? 'try' : 'tries'} left`);
+}
+function render() {
+  layout(); paintCards(); renderEggs();
+  $('play').hidden = done();
+  if (done()) showResult(); else { $('result').hidden = true; $('fact').hidden = true; }
+}
+
+/* ================= Moving cards ================= */
+/* Move one card to a slot. Locked cards stay put; the others shuffle up or down around them. */
+function moveTo(it, target) {
+  const open = [0, 1, 2, 3, 4].filter(s => !isLocked(s));
+  if (!open.includes(target)) return false;
+  const seq = open.map(s => S.order[s]).filter(x => x !== it);
+  seq.splice(open.indexOf(target), 0, it);
+  const before = S.order.join();
+  open.forEach((s, k) => S.order[s] = seq[k]);
+  return S.order.join() !== before;
+}
+function swap(a, b) {
+  const sa = S.order.indexOf(a), sb = S.order.indexOf(b);
+  S.order[sa] = b; S.order[sb] = a;
+}
+function tapCard(it) {
+  if (busy || done()) return;
+  const slot = S.order.indexOf(it);
+  if (isLocked(slot)) { say('Green cards are locked in. Move the others', 'warn'); return; }
+  if (sel === -1) { sel = it; sfx.peck(); say('Now tap the card to swap it with'); }
+  else if (sel === it) { sel = -1; say(''); }
+  else { swap(sel, it); sel = -1; sfx.slide(); say(''); save(); layout(); }
+  paintCards();
+}
+function onDown(e) {
+  const el = e.target.closest('.card'); if (!el || busy || done() || drag || (e.pointerType === 'mouse' && e.button > 0)) return;
+  const it = +el.dataset.it, slot = S.order.indexOf(it);
+  if (isLocked(slot)) return;
+  drag = {it, el, id: e.pointerId, y0: e.clientY, base: slot * step(), moved: false};
+  try { el.setPointerCapture(e.pointerId); } catch (er) {}
+}
+function onMove(e) {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dy = e.clientY - drag.y0;
+  if (!drag.moved) {
+    if (Math.abs(dy) < 6) return;
+    drag.moved = true; sel = -1; paintCards();
+    drag.el.classList.add('drag'); say('');
+  }
+  if (e.cancelable) e.preventDefault();
+  const st = step(), y = Math.max(-st * .3, Math.min(4.3 * st, drag.base + dy));
+  drag.el.style.transform = `translateY(${y}px) scale(1.03)`;
+  const target = Math.max(0, Math.min(4, Math.round(y / st)));
+  if (target !== S.order.indexOf(drag.it) && moveTo(drag.it, target)) { sfx.slide(); layout(drag.it); }
+}
+function onUp(e) {
+  if (!drag || e.pointerId !== drag.id) return;
+  if (e.type === 'lostpointercapture' && e.target !== drag.el) return;   // capture moving onto the card isn't the finger lifting
+  const d = drag; drag = null;
+  try { d.el.releasePointerCapture(d.id); } catch (er) {}
+  if (!d.moved) return;          // a tap: the click handler deals with it
+  dragEnded = Date.now();
+  d.el.classList.remove('drag');
+  save(); layout(); paintCards();
+}
+function onKey(e) {
+  const el = e.target.closest('.card'); if (!el || busy || done()) return;
+  if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+  e.preventDefault();
+  const it = +el.dataset.it, slot = S.order.indexOf(it);
+  if (isLocked(slot)) return;
+  const dir = e.key === 'ArrowUp' ? -1 : 1;
+  let t = slot + dir; while (t >= 0 && t <= 4 && isLocked(t)) t += dir;
+  if (t < 0 || t > 4) return;
+  moveTo(it, t); sel = -1; sfx.slide(); save(); layout(); paintCards(); el.focus();
+}
+
+/* ================= Locking in ================= */
+async function lockIn() {
+  if (busy || done()) return;
+  if (S.tries.some(t => t.join() === S.order.join())) { say("You've tried that order already. Move something first", 'warn'); return; }
+  busy = true; sel = -1; paintCards(); $('lockBtn').disabled = true; say('');
+  const t = [...S.order];
+  S.tries.push(t);
+  const newly = [0, 1, 2, 3, 4].filter(s => t[s] === s && !isLocked(s));
+  S.locked = [0, 1, 2, 3, 4].filter(s => t[s] === s);
+  const right = rightIn(t);
+  if (right === 5) S.status = 'won';
+  else if (S.tries.length >= MAX_TRIES) S.status = 'lost';
+  save();
+  // check each rung from the top
+  let g = 0;
+  for (let s = 0; s < 5; s++) {
+    const el = cardEl(t[s]);
+    if (newly.includes(s)) { el.classList.add('ok', 'pop'); sfx.right(g++); }
+    else if (t[s] !== s) { el.classList.add('nope'); sfx.wrong(); }
+    await wait(reduceMotion ? 0 : 170);
+  }
+  await wait(reduceMotion ? 0 : 250);
+  $('cards').querySelectorAll('.card').forEach(c => c.classList.remove('pop', 'nope'));
+  if (S.status !== 'won') { renderEggs(MAX_TRIES - S.tries.length); sfx.crack(); if (navigator.vibrate) navigator.vibrate(40); }
+  busy = false; $('lockBtn').disabled = false;
+  if (done()) return finish();
+  const l = triesLeft();
+  say(`${right} of 5 in the right place. ${l} ${l === 1 ? 'try' : 'tries'} left`, right >= 3 ? 'good' : 'bad');
+  layout(); paintCards();
+}
+
+async function finish() {
+  record();
+  if (S.status === 'won') { sfx.win(); }
+  else {
+    sfx.lose();
+    // show the real order: the cards slide to where they belong
+    $('play').hidden = true;
+    paintCards();
+    await wait(reduceMotion ? 0 : 400);
+  }
+  S.order = [0, 1, 2, 3, 4]; save();
+  render();
+  setTimeout(() => $('result').scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest'}), reduceMotion ? 0 : 600);
+}
+function record() {
+  if (TEST || stats.lastDay === DAY) return;
+  stats.played++;
+  stats.streak = stats.lastDay === DAY - 1 ? stats.streak + 1 : 1;   // a missed day breaks the streak
+  stats.best = Math.max(stats.best, stats.streak);
+  stats.lastDay = DAY;
+  if (S.status === 'won') { stats.wins++; stats.dist[S.tries.length - 1]++; }
+  store.set(SKEY, stats);
+}
+
+/* ================= Results ================= */
+const STAMP = ['Ruled the roost', 'Top bird', 'By a feather'];
+const VERDICT = ['Perfect order', 'Nicely sorted', 'Just squeaked it'];
+function showResult() {
+  const R = $('result');
+  if (P.f) { $('fact').hidden = false; $('fact').innerHTML = `<b>Did you know?</b> ${esc(P.f)}`; }
+  if (!R.hidden && R.dataset.day == DAY) { tick(); return; }
+  const won = S.status === 'won', n = S.tries.length, st = streakNow();
+  const line = won
+    ? (n === 1 ? 'All five in the right order, <b>first try</b>.' : `All five in the right order in <b>${n} tries</b>.`)
+    : `You got <b>${rightIn(lastTry())} of 5</b> in the right place. The real order is above.`;
+  const mini = S.tries.map(t => `<div>${t.map((v, i) => `<i class="${v === i ? 'y' : ''}"></i>`).join('')}</div>`).join('');
+  R.hidden = false; R.dataset.day = DAY;
+  R.innerHTML = `
+    <span class="stamp${won ? '' : ' fail'}">${won ? STAMP[n - 1] : 'Hen-pecked'}</span>
+    <h2 class="verdict">${won ? VERDICT[n - 1] : 'Feathers ruffled'}</h2>
+    <p class="line">${line}</p>
+    <div class="mini" aria-label="Your tries, green for the right place">${mini}</div>
+    ${st > 0 && !TEST ? `<p class="streak">Day streak: ${st}</p>` : ''}
+    ${TEST ? '<div class="btns"><button class="btn ghost" onclick="location.reload()">Play it again</button></div>'
+      : `<div class="btns"><button class="btn" id="shareImg">Share image</button><button class="btn ghost" id="copyBtn">Copy result</button></div>
+    <p class="next">Next coop opens in <b id="countdown">--:--:--</b></p>`}`;
+  if (!TEST) { $('shareImg').onclick = shareImage; $('copyBtn').onclick = copyResult; }
+  tick();
+}
+const gridLines = () => S.tries.map(t => t.map((v, i) => v === i ? '🟩' : '⬛').join('')).join('\n');
+function shareText() {
+  const won = S.status === 'won', st = streakNow();
+  return `🐔 Pecking Order #${DAY} ${won ? S.tries.length : 'X'}/${MAX_TRIES}\n${P.t}\n\n${gridLines()}` +
+    (st > 1 ? `\n\n🔥 ${st} day streak` : '') + `\n${SITE_URL}`;
+}
+async function copyResult() {
+  const t = shareText();
+  try { await navigator.clipboard.writeText(t); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast('Copied. Paste it in the group chat');
+}
+function renderStats() {
+  const s = stats;
+  $('statsGrid').innerHTML = [['Played', s.played], ['Win %', s.played ? Math.round(s.wins / s.played * 100) : 0], ['Day streak', streakNow()], ['Best', s.best]]
+    .map(([l, v]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
+  const mx = Math.max(1, ...s.dist), today = S.status === 'won' ? S.tries.length - 1 : -1;
+  $('dist').innerHTML = s.dist.map((v, i) => `<div class="bar"><span>${i + 1}</span><i class="${i === today ? 'hl' : ''}" style="width:${Math.max(8, v / mx * 90)}%">${v}</i></div>`).join('');
+}
+function tick() {
+  const s = secondsToNext();
+  const a = $('countdown'), b = $('statsCountdown');
+  if (a) a.textContent = hms(s);
+  if (b) b.textContent = hms(s);
+  if (s <= 1 && !TEST) setTimeout(() => location.reload(), 1500);
+}
+
+/* ================= Canvas drawing (share image + og-image) ================= */
+async function fontsReady() {
+  try { await Promise.all(["400 100px 'DM Serif Display'", "italic 400 50px 'DM Serif Display'", "500 30px 'DM Mono'", "400 30px 'DM Mono'", "700 30px 'DM Sans'"].map(f => document.fonts.load(f))); } catch (e) {}
+}
+function rrect(x, a, b, w, h, r) {
+  x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r);
+  x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath();
+}
+function bg(x, W, H) {
+  const sky = x.createLinearGradient(0, 0, 0, H);
+  sky.addColorStop(0, '#cbb6ff'); sky.addColorStop(.48, '#ffc6de'); sky.addColorStop(1, '#ffe39e');
+  x.fillStyle = sky; x.fillRect(0, 0, W, H);
+  // chicken footprints
+  const prints = [[34, 44, -20], [118, 28, 28], [76, 106, 8], [144, 134, -34], [22, 150, 40]], T = 255, k = T / 170;
+  x.save(); x.strokeStyle = 'rgba(255,255,255,.6)'; x.lineWidth = 5; x.lineCap = 'round';
+  for (let oy = 0; oy < H + T; oy += T) for (let ox = 0; ox < W + T; ox += T) prints.forEach(([a, b, r]) => {
+    x.save(); x.translate(ox + a * k, oy + b * k); x.rotate(r * Math.PI / 180); x.scale(k, k); x.lineWidth = 3.4;
+    x.beginPath(); x.moveTo(0, 0); x.lineTo(0, -15); x.moveTo(0, 0); x.lineTo(-10, -11); x.moveTo(0, 0); x.lineTo(10, -11); x.moveTo(0, 0); x.lineTo(0, 6); x.stroke();
+    x.restore();
+  });
+  x.restore();
+}
+function frameLine(x, X, Y, W, H) {
+  x.save(); x.fillStyle = '#2a1572'; rrect(x, X, Y + 8, W, H, 30); x.fill();
+  rrect(x, X, Y, W, H, 30); x.save(); x.clip(); bg(x, x.canvas.width, x.canvas.height);   // sky shows through the card
+  x.fillStyle = 'rgba(255,255,255,.5)'; x.fillRect(X, Y, W, H); x.restore();
+  x.strokeStyle = '#2a1572'; x.lineWidth = 4; rrect(x, X, Y, W, H, 30); x.stroke(); x.restore();
+}
+function text(x, t, cx, y, font, fill, ls, align = 'center') {
+  x.font = font; x.fillStyle = fill; x.textAlign = align; x.textBaseline = 'alphabetic';
+  if ('letterSpacing' in x) x.letterSpacing = ls || '0px';
+  x.fillText(t, cx, y);
+  if ('letterSpacing' in x) x.letterSpacing = '0px';
+}
+/* The title as a prize ribbon: gradient banner, notched tails, white lettering. y is the banner's top edge */
+function ribbonDraw(x, t, cx, y, size) {
+  const font = `400 ${size}px 'DM Serif Display',Georgia,serif`; x.font = font;
+  const tw = x.measureText(t).width, pad = size * .34, w = tw + pad * 2, h = size * 1.32, X = cx - w / 2;
+  const lw = Math.max(3, size * .055), lip = size * .1, tl = size * .95, out = size * .55;
+  const T = y + h * .36, B = y + h + size * .28, M = (T + B) / 2 + (B - T) * .05;
+  const tail = (pts, col) => {
+    const path = () => { x.beginPath(); pts.forEach(([a, b], i) => i ? x.lineTo(a, b) : x.moveTo(a, b)); x.closePath(); };
+    x.save(); x.translate(0, lip); path(); x.fillStyle = '#2a1572'; x.fill(); x.restore();
+    path(); x.fillStyle = col; x.fill(); x.strokeStyle = '#2a1572'; x.lineWidth = lw; x.lineJoin = 'round'; x.stroke();
+  };
+  const L = X - out, R = X + w + out;
+  tail([[L, T], [L + tl, T], [L + tl, B], [L, B], [L + tl * .32, M]], '#7b2ff0');
+  tail([[R - tl, T], [R, T], [R - tl * .32, M], [R, B], [R - tl, B]], '#d42a7a');
+  rrect(x, X, y + lip, w, h, size * .22); x.fillStyle = '#2a1572'; x.fill();
+  const g = x.createLinearGradient(X, 0, X + w, 0); g.addColorStop(0, '#9446ff'); g.addColorStop(1, '#ea3b8c');
+  rrect(x, X, y, w, h, size * .22); x.fillStyle = g; x.fill(); x.strokeStyle = '#2a1572'; x.lineWidth = lw; x.stroke();
+  const base = y + h * .74;
+  text(x, t, cx, base + size * .05, font, 'rgba(42,21,114,.4)');
+  text(x, t, cx, base, font, '#ffffff');
+  return y + h + lip;
+}
+function footerLine(x, cx, y, size) {
+  const a = 'A new daily ranking puzzle from ', b = 'Puzzl Lab';
+  const fa = `400 ${size}px 'DM Mono',monospace`, fb = `500 ${size}px 'DM Mono',monospace`;
+  x.font = fa; const wa = x.measureText(a).width; x.font = fb; const wb = x.measureText(b).width;
+  const sx = cx - (wa + wb) / 2; x.textAlign = 'left';
+  x.font = fa; x.fillStyle = '#5a4a99'; x.fillText(a, sx, y);
+  x.font = fb; x.fillStyle = '#2a1572'; x.fillText(b, sx + wa, y);
+}
+function pill(x, t, cx, y, h, size) {
+  const font = `italic 400 ${size}px 'DM Serif Display',Georgia,serif`; x.font = font;
+  const w = x.measureText(t).width + h;
+  rrect(x, cx - w / 2, y + 5, w, h, h / 2); x.fillStyle = '#2a1572'; x.fill();
+  rrect(x, cx - w / 2, y, w, h, h / 2); x.fillStyle = '#ffffff'; x.fill(); x.strokeStyle = '#2a1572'; x.lineWidth = 3; x.stroke();
+  text(x, t, cx, y + h / 2 + size * .33, font, '#d81b6a');
+}
+function stampDraw(x, t, cx, cy, size, col) {
+  x.save(); x.translate(cx, cy); x.rotate(-6 * Math.PI / 180);
+  x.font = `500 ${size}px 'DM Mono',monospace`;
+  if ('letterSpacing' in x) x.letterSpacing = size * .14 + 'px';
+  const w = x.measureText(t).width + size * 1.2, h = size * 1.75;
+  x.fillStyle = '#ffffff'; rrect(x, -w / 2, -h / 2, w, h, size * .35); x.fill();
+  x.strokeStyle = col; x.lineWidth = size * .13; rrect(x, -w / 2, -h / 2, w, h, size * .35); x.stroke();
+  x.lineWidth = size * .07; const p = size * .24; rrect(x, -w / 2 + p, -h / 2 + p, w - 2 * p, h - 2 * p, size * .2); x.stroke();
+  x.fillStyle = col; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t, size * .07, size * .04);
+  if ('letterSpacing' in x) x.letterSpacing = '0px';
+  x.restore();
+}
+function eggDraw(x, cx, cy, w, fill, cracked) {
+  const h = w * 1.27, s = w / 22;
+  x.save(); x.translate(cx - w / 2, cy - h / 2); x.scale(s, s);
+  const p = new Path2D('M11 1C5.5 1 1 9.5 1 16.5 1 23 5.5 27 11 27s10-4 10-10.5C21 9.5 16.5 1 11 1z');
+  x.fillStyle = fill; x.fill(p); x.strokeStyle = cracked ? '#5a4a99' : '#2a1572'; x.lineWidth = 1.4; x.stroke(p);
+  if (cracked) { x.strokeStyle = '#5a4a99'; x.lineWidth = 1.6; x.lineJoin = 'round'; x.stroke(new Path2D('M2 15l4-2.5 3 3 3.5-3.5 3 3 4.5-2.5')); }
+  x.restore();
+}
+function rosetteDraw(x, cx, cy, r, n, col) {
+  x.save(); x.translate(cx - r, cy - r); x.scale(r / 20, r / 20);
+  const rp = new Path2D(rosettePath());
+  x.fillStyle = col; x.fill(rp); x.strokeStyle = '#2a1572'; x.lineWidth = 1.8; x.lineJoin = 'round'; x.stroke(rp);
+  x.restore();
+  text(x, String(n), cx, cy + r * .33, `400 ${r * .95}px 'DM Serif Display',Georgia,serif`, '#2a1572');
+}
+async function drawShare() {
+  await fontsReady();
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  bg(x, W, H);
+  frameLine(x, 60, 60, 960, 1230);
+  const won = S.status === 'won', st = streakNow(), rows = S.tries.length;
+  text(x, `COOP NO. ${DAY}`, 540, 180, "500 30px 'DM Mono',monospace", '#2a1572', '10px');
+  ribbonDraw(x, 'Pecking Order', 540, 214, 92);
+  text(x, P.t, 540, 420, "italic 400 46px 'DM Serif Display',Georgia,serif", '#d81b6a');
+  // one row of eggs per try: green for the right place
+  const ew = 92, gap = 34, rh = ew * 1.27, rgap = 30, gw = 5 * ew + 4 * gap, gh = rows * rh + (rows - 1) * rgap;
+  const extra = 92 + (st > 1 ? 52 : 0) + 40 + 86;
+  const top = 500 + Math.max(0, (1170 - 500 - gh - extra) / 2), gx = 540 - gw / 2;
+  S.tries.forEach((t, r) => t.forEach((v, i) => eggDraw(x, gx + i * (ew + gap) + ew / 2, top + r * (rh + rgap) + rh / 2, ew, v === i ? '#2fd47a' : '#cabdf2', v !== i)));
+  stampDraw(x, (won ? STAMP[rows - 1] : 'Hen-pecked').toUpperCase(), gx + gw - 70, top - 52, 32, won ? '#13a35a' : '#e0294f');
+  const res = won ? (rows === 1 ? 'SORTED FIRST TRY' : `SORTED IN ${rows} TRIES`) : `${rightIn(lastTry())} OF 5 IN PLACE`;
+  let y = top + gh + 92;
+  text(x, res, 540, y, "500 32px 'DM Mono',monospace", '#2a1572', '3px');
+  if (st > 1) { y += 52; text(x, `${st} DAY STREAK`, 540, y, "500 30px 'DM Mono',monospace", '#2a1572', '6px'); }
+  pill(x, '“Who rules the roost?”', 540, y + 40, 86, 42);
+  text(x, SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, ''), 540, 1236, "400 28px 'DM Mono',monospace", '#5a4a99');
+  footerLine(x, 540, 1328, 24);
+  return cv;
+}
+async function shareImage() {
+  const cv = await drawShare();
+  const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+  const file = new File([blob], `pecking-order-${DAY}.png`, {type: 'image/png'});
+  if (navigator.canShare && navigator.canShare({files: [file]})) {
+    try { await navigator.share({files: [file], text: shareText()}); } catch (e) {}
+    return;
+  }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = file.name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast('Image saved');
+}
+async function drawOG() {
+  await fontsReady();
+  const W = 1200, H = 630, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  bg(x, W, H);
+  frameLine(x, 70, 46, 1060, 536);
+  text(x, "TODAY'S COOP", 345, 168, "500 22px 'DM Mono',monospace", '#2a1572', '8px');
+  ribbonDraw(x, 'Pecking Order', 345, 212, 58);
+  text(x, 'Who rules the roost?', 345, 380, "italic 400 40px 'DM Serif Display',Georgia,serif", '#d81b6a');
+  [0, 1, 2].forEach(i => eggDraw(x, 301 + i * 44, 450, 30, i < 2 ? '#ffffff' : '#cabdf2', i >= 2));
+  // a little ladder of cards
+  const cx = 640, cw = 420, ch = 76, cg = 16, items = [['🫖', 'Builder\'s tea'], ['🥧', 'Pork pie'], ['🍟', 'Chip butty'], ['🍪', 'Custard cream']];
+  items.forEach((it, i) => {
+    const y = 108 + i * (ch + cg), ok = i === 0 || i === 2;
+    rosetteDraw(x, cx + 30, y + ch / 2, 28, i + 1, RANK_COL[i]);
+    const X = cx + 76 + (i === 1 ? 14 : 0);
+    x.save();
+    if (i === 1) { x.translate(X + cw / 2, y + ch / 2); x.rotate(-2.5 * Math.PI / 180); x.translate(-(X + cw / 2), -(y + ch / 2)); }
+    rrect(x, X, y + 6, cw, ch, 14); x.fillStyle = '#2a1572'; x.fill();
+    rrect(x, X, y, cw, ch, 14); x.fillStyle = ok ? '#2fd47a' : i === 1 ? '#ffe98a' : '#ffffff'; x.fill();
+    x.strokeStyle = '#2a1572'; x.lineWidth = 3; x.stroke();
+    
+    x.font = "34px sans-serif"; x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillStyle = '#000'; x.fillText(it[0], X + 20, y + ch / 2 + 2);
+    text(x, it[1], X + 74, y + ch / 2 + 9, "700 28px 'DM Sans',sans-serif", ok ? '#08331c' : '#2a1572', 0, 'left');
+    x.restore();
+  });
+  footerLine(x, 600, 612, 20);
+  return cv;
+}
+
+/* ================= Puzzle maker (?make) ================= */
+function maker() {
+  document.title = 'Puzzle maker · Pecking Order';
+  const opts = PUZZLES.map((_, i) => `<option value="${i}">No. ${i + 1} · ${dateFor(i + 1).toLocaleDateString('en-GB', {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'})}</option>`).join('');
+  $('app').innerHTML = `
+    <div class="maker">
+      <h1><span>Pecking Order</span></h1>
+      <h2>Puzzle maker</h2>
+      <p>Write the question, then the five answers <b>in the right order, top first</b>. The game scrambles them. Press <b>Make line</b>, then paste the line on a new row at the bottom of the PUZZLES list in index.html. The next empty day is No. ${PUZZLES.length + 1} (${dateFor(PUZZLES.length + 1).toLocaleDateString('en-GB', {day: 'numeric', month: 'long', timeZone: 'UTC'})}).</p>
+      <div class="mk-box"><label for="mkLoad">Load an existing puzzle to check or edit it</label>
+        <select id="mkLoad"><option value="">Choose a puzzle…</option>${opts}</select></div>
+      <div class="mk-box">
+        <label for="mkT">Title</label><input id="mkT" maxlength="28" placeholder="e.g. Monopoly money">
+        <label for="mkQ">Question</label><input id="mkQ" maxlength="70" placeholder="e.g. Order them by price on the UK Monopoly board">
+        <div class="mk-two"><div><label for="mkHi">Top label</label><input id="mkHi" maxlength="16" placeholder="Priciest"></div>
+        <div><label for="mkLo">Bottom label</label><input id="mkLo" maxlength="16" placeholder="Cheapest"></div></div>
+      </div>
+      <div class="mk-box"><label>The five, top first: emoji, name, and the number that settles it</label>
+        ${[0, 1, 2, 3, 4].map(i => `<div class="mk-item"><b>${i + 1}</b><input id="e${i}" maxlength="8" aria-label="Item ${i + 1} emoji"><input id="n${i}" maxlength="44" aria-label="Item ${i + 1} name"><input id="v${i}" maxlength="16" aria-label="Item ${i + 1} value"></div>`).join('')}
+        <label for="mkF">Did you know? (optional, shown at the end)</label><input id="mkF" maxlength="160">
+      </div>
+      <p class="mk-note" id="mkNote"></p>
+      <div class="mk-row"><button class="btn" id="mkMake">Make line</button><button class="btn ghost" id="mkTest">Test play it</button></div>
+      <textarea id="mkOut" readonly aria-label="Line to paste"></textarea>
+      <div class="mk-row"><button class="btn ghost" id="mkCopy">Copy line</button></div>
+    </div>`;
+  const note = (t, c) => { $('mkNote').textContent = t; $('mkNote').className = 'mk-note ' + (c || ''); };
+  const read = () => {
+    const p = {t: $('mkT').value.trim(), q: $('mkQ').value.trim(), hi: $('mkHi').value.trim(), lo: $('mkLo').value.trim(),
+      i: [0, 1, 2, 3, 4].map(i => [$('e' + i).value.trim() || '•', $('n' + i).value.trim(), $('v' + i).value.trim()])};
+    const f = $('mkF').value.trim(); if (f) p.f = f;
+    if (!p.t || !p.q || !p.hi || !p.lo) { note('Fill in the title, question and both labels.', 'bad'); return null; }
+    if (p.i.some(x => !x[1] || !x[2])) { note('Each of the five needs a name and a value.', 'bad'); return null; }
+    const names = p.i.map(x => x[1].toLowerCase()), dup = names.find((n, i) => names.indexOf(n) !== i);
+    if (dup) { note(`${dup} is in there twice. Every answer needs to be different.`, 'bad'); return null; }
+    const vals = p.i.map(x => x[2]), same = vals.find((v, i) => vals.indexOf(v) !== i);
+    note(same ? `Made. Heads up: two answers share the value ${same}, so the order could be argued.` : 'Made. Copy the line and paste it into the PUZZLES list.', same ? 'warn' : 'good');
+    return p;
+  };
+  $('mkMake').onclick = () => { const p = read(); if (p) $('mkOut').value = `  '${encode(p)}',`; };
+  $('mkCopy').onclick = async () => { const t = $('mkOut').value; if (!t) return; try { await navigator.clipboard.writeText(t); } catch (e) { $('mkOut').select(); document.execCommand('copy'); } toast('Line copied'); };
+  $('mkTest').onclick = () => { const p = read(); if (p) window.open(location.pathname + '?test=' + encodeURIComponent(encode(p)), '_blank'); };
+  $('mkLoad').onchange = e => {
+    if (e.target.value === '') return;
+    const p = decode(PUZZLES[+e.target.value]);
+    $('mkT').value = p.t; $('mkQ').value = p.q; $('mkHi').value = p.hi; $('mkLo').value = p.lo; $('mkF').value = p.f || '';
+    p.i.forEach((x, i) => { $('e' + i).value = x[0]; $('n' + i).value = x[1]; $('v' + i).value = x[2]; });
+    $('mkOut').value = ''; note(`Loaded No. ${+e.target.value + 1}. Change anything, then make a new line to replace the old one.`);
+  };
+}
+
+/* ================= Start ================= */
+function openM(id) { $(id).classList.add('open'); const c = $(id).querySelector('[data-close]'); c && c.focus({preventScroll: true}); }
+function init() {
+  paintSound();
+  $('helpBtn').onclick = () => openM('helpModal');
+  $('statsBtn').onclick = () => { renderStats(); tick(); openM('statsModal'); };
+  $('soundBtn').onclick = () => { soundOn = !soundOn; store.set('pecking-sound', soundOn); paintSound(); if (soundOn) sfx.peck(); };
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => {
+    if (e.target === m || e.target.closest('[data-close]')) m.classList.remove('open');
+  }));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open')); });
+  if (!P) { $('play').hidden = true; $('board').hidden = true; $('question').innerHTML = '<span>Today\'s puzzle didn\'t load. Check the PUZZLES list in index.html.</span>'; return; }
+  buildBoard();
+  const cards = $('cards');
+  cards.addEventListener('pointerdown', onDown);
+  addEventListener('pointermove', onMove, {passive: false});
+  addEventListener('pointerup', onUp);
+  addEventListener('pointercancel', onUp);
+  cards.addEventListener('lostpointercapture', onUp);
+  // iPhones can still try to scroll the page mid-drag; hold it still while a card is being moved
+  cards.addEventListener('touchmove', e => { if (drag && e.cancelable) e.preventDefault(); }, {passive: false});
+  cards.addEventListener('click', e => { const c = e.target.closest('.card'); if (c && Date.now() - dragEnded > 350) tapCard(+c.dataset.it); });
+  cards.addEventListener('keydown', onKey);
+  $('lockBtn').onclick = lockIn;
+  if (done()) { record(); S.order = [0, 1, 2, 3, 4]; }
+  render();
+  if (!done()) say(S.tries.length ? `${triesLeft()} ${triesLeft() === 1 ? 'try' : 'tries'} left. Green cards are locked in` : 'Drag to reorder, or tap two cards to swap');
+  if (!TEST && !store.get('pecking-seen', false)) { openM('helpModal'); store.set('pecking-seen', true); }
+  let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => layout(), 80); });
+  setInterval(tick, 1000);
+  document.addEventListener('visibilitychange', () => { if (!TEST && !document.hidden && dayNumber() !== DAY) location.reload(); });
+}
+
+if (params.has('og')) {
+  document.body.innerHTML = '<div class="og"><p class="kicker" style="margin-bottom:12px">og-image, 1200×630</p><div id="ogc"></div><button class="btn" id="ogdl" style="margin-top:16px">Download og-image.png</button></div>';
+  drawOG().then(cv => {
+    $('ogc').appendChild(cv);
+    $('ogdl').onclick = () => cv.toBlob(b => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'og-image.png'; a.click(); }, 'image/png');
+  });
+} else if (params.has('make')) {
+  maker();
+} else {
+  init();
+}
+</script>
+</body>
+</html>
