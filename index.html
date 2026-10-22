@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#cbb6ff">
-<title>Pecking Order · Puzzl Lab</title>
-<meta name="description" content="Five things, one order. Can you rule the roost? A new daily ranking puzzle from Puzzl Lab.">
+<title>Pecking Order · Puzzl</title>
+<meta name="description" content="Five things, one order. Rank it right and rule the roost. A new daily ranking puzzle from Puzzl.">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Puzzl Lab">
-<meta property="og:title" content="Pecking Order · Who rules the roost?">
-<meta property="og:description" content="Five things, one order. Can you rule the roost? A new daily ranking puzzle from Puzzl Lab.">
+<meta property="og:site_name" content="Puzzl">
+<meta property="og:title" content="Pecking Order · Rank it right. Rule the roost.">
+<meta property="og:description" content="Five things, one order. Rank it right and rule the roost. A new daily ranking puzzle from Puzzl.">
 <meta property="og:url" content="https://playpuzzl.com/Pecking-Order/">
 <meta property="og:image" content="https://playpuzzl.com/Pecking-Order/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -36,7 +36,7 @@
   padding-top:env(safe-area-inset-top,0px);
 }
 @supports (height:100dvh){:root{--ch:clamp(54px, 7.6dvh, 62px)}}
-/* Pecking Order is the bright one in Puzzl Lab: same palette whatever the viewer's theme */
+/* Pecking Order is the bright one in Puzzl: same palette whatever the viewer's theme */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#2a1572;--text:#2a1572}}
 :root[data-theme="dark"]{--ink:#2a1572;--text:#2a1572}
 html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bgC)}
@@ -206,7 +206,7 @@ footer b{color:var(--ink);font-weight:500}
     </div>
   </div>
   <h1><span>Pecking Order</span></h1>
-  <p class="sub">Who rules the roost?</p>
+  <p class="sub">Rank it right. Rule the roost.</p>
 
   <div class="question" id="question"></div>
 
@@ -691,7 +691,7 @@ function ribbonDraw(x, t, cx, y, size) {
   return y + h + lip;
 }
 function footerLine(x, cx, y, size) {
-  const a = 'A new daily ranking puzzle from ', b = 'Puzzl Lab';
+  const a = 'A new daily ranking puzzle from ', b = 'Puzzl';
   const fa = `400 ${size}px 'DM Mono',monospace`, fb = `500 ${size}px 'DM Mono',monospace`;
   x.font = fa; const wa = x.measureText(a).width; x.font = fb; const wb = x.measureText(b).width;
   const sx = cx - (wa + wb) / 2; x.textAlign = 'left';
@@ -752,7 +752,7 @@ async function drawShare() {
   let y = top + gh + 92;
   text(x, res, 540, y, "500 32px 'DM Mono',monospace", '#2a1572', '3px');
   if (st > 1) { y += 52; text(x, `${st} DAY STREAK`, 540, y, "500 30px 'DM Mono',monospace", '#2a1572', '6px'); }
-  pill(x, '“Who rules the roost?”', 540, y + 40, 86, 42);
+  pill(x, '“Rank it right. Rule the roost.”', 540, y + 40, 86, 42);
   text(x, SITE_URL.replace(/^https?:\/\//, '').replace(/\/$/, ''), 540, 1236, "400 28px 'DM Mono',monospace", '#5a4a99');
   footerLine(x, 540, 1328, 24);
   return cv;
@@ -777,7 +777,7 @@ async function drawOG() {
   frameLine(x, 70, 46, 1060, 536);
   text(x, "TODAY'S COOP", 345, 168, "500 22px 'DM Mono',monospace", '#2a1572', '8px');
   ribbonDraw(x, 'Pecking Order', 345, 212, 58);
-  text(x, 'Who rules the roost?', 345, 380, "italic 400 40px 'DM Serif Display',Georgia,serif", '#d81b6a');
+  text(x, 'Rank it right. Rule the roost.', 345, 380, "italic 400 40px 'DM Serif Display',Georgia,serif", '#d81b6a');
   [0, 1, 2].forEach(i => eggDraw(x, 301 + i * 44, 450, 30, i < 2 ? '#ffffff' : '#cabdf2', i >= 2));
   // a little ladder of cards
   const cx = 640, cw = 420, ch = 76, cg = 16, items = [['🫖', 'Builder\'s tea'], ['🥧', 'Pork pie'], ['🍟', 'Chip butty'], ['🍪', 'Custard cream']];
